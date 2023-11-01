@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "books-catalog-drf"
+version = "0.1.0"
+description = ""
+authors = ["aidoskanapyanov <aidos.kanapyanov@alumni.nu.edu.kz>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ipython = "^8.17.2"
+black = "^23.10.1"
+ipdb = "^0.13.13"
+django = "^4.2.6"
+djangorestframework = "^3.14.0"
+django-filter = "^23.3"
+drf-yasg = "^1.21.7"
+django-extensions = "^3.2.3"
+django-cors-headers = "^4.3.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
