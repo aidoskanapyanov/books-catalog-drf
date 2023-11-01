@@ -16,6 +16,7 @@ django-filter = "^23.3"
 drf-yasg = "^1.21.7"
 django-extensions = "^3.2.3"
 django-cors-headers = "^4.3.0"
+faker = "^19.12.1"
 
 
 [build-system]
