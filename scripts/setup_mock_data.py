@@ -34,8 +34,12 @@ def setup_books():
         _title = faker.sentence()
         _description = faker.text()
         _publication_date = faker.date_between()
+        _image_url = faker.image_url(width=480, height=640)
         _book = Book(
-            title=_title, description=_description, publication_date=_publication_date
+            title=_title,
+            description=_description,
+            publication_date=_publication_date,
+            image_url=_image_url,
         )
         _books.append(_book)
 
