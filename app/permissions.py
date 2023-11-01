@@ -8,6 +8,11 @@ class BookAccessPolicy(AccessPolicy):
             "principal": "*",
             "effect": "allow",
         },
+        {
+            "action": ["toggle_favorite"],
+            "principal": "*",
+            "effect": "allow",
+        },
     ]
 
     @classmethod

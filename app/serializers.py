@@ -30,9 +30,16 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     description = serializers.CharField()
     reviews = ReviewSerializer(many=True, read_only=True)
+    is_favorite = serializers.SerializerMethodField()
 
     def get_average_rating(self, obj):
         return obj.reviews.aggregate(Avg('rating'))['rating__avg']
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if not request:
+            return False
+        return request.user.userprofile.favorite_books.filter(id=obj.id).exists()
 
     class Meta:
         model = Book
@@ -46,5 +53,6 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
             'average_rating',
             'description',
             'reviews',
+            'is_favorite',
         ]
         access_policy = BookAccessPolicy
