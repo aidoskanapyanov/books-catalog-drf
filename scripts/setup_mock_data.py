@@ -61,7 +61,6 @@ def setup_users():
         user = User(
             first_name=faker.first_name(),
             last_name=faker.last_name(),
-            username=faker.unique.user_name(),
             email=faker.unique.ascii_safe_email(),
             password='12345678',
             is_active=True,

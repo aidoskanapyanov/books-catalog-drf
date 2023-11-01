@@ -9,13 +9,15 @@ from app.permissions import BookAccessPolicy
 class ReviewSerializer(serializers.ModelSerializer):
     text = serializers.CharField()
     rating = serializers.IntegerField()
-    username = serializers.StringRelatedField(source='user.user.username')
+    email = serializers.StringRelatedField(source='user.user.email')
+    full_name = serializers.StringRelatedField(source='user.user.get_full_name')
 
     class Meta:
         model = Review
         fields = [
             'id',
-            'username',
+            'email',
+            'full_name',
             'text',
             'rating',
         ]
@@ -38,6 +40,8 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
     def get_is_favorite(self, obj):
         request = self.context.get('request')
         if not request:
+            return False
+        if not request.user.is_authenticated:
             return False
         return request.user.userprofile.favorite_books.filter(id=obj.id).exists()
 
