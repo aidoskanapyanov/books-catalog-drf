@@ -202,6 +202,20 @@ django = ">=3.0"
 pytz = "*"
 
 [[package]]
+name = "drf-access-policy"
+version = "1.5.0"
+description = "Declarative access policies/permissions modeled after AWS' IAM policies."
+optional = false
+python-versions = "*"
+files = [
+    {file = "drf-access-policy-1.5.0.tar.gz", hash = "sha256:12c6a14182208d40544a2fd6f065db73ba6f60b3d127a929260e80dd192b8cbf"},
+]
+
+[package.dependencies]
+djangorestframework = "*"
+pyparsing = "*"
+
+[[package]]
 name = "drf-yasg"
 version = "1.21.7"
 description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
@@ -496,6 +510,20 @@ files = [
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pyparsing"
+version = "3.1.1"
+description = "pyparsing module - Classes and methods to define and execute parsing grammars"
+optional = false
+python-versions = ">=3.6.8"
+files = [
+    {file = "pyparsing-3.1.1-py3-none-any.whl", hash = "sha256:32c7c0b711493c72ff18a981d24f28aaf9c1fb7ed5e9667c9e84e3db623bdbfb"},
+    {file = "pyparsing-3.1.1.tar.gz", hash = "sha256:ede28a1a32462f5a9705e07aea48001a08f7cf81a021585011deba701581a0db"},
+]
+
+[package.extras]
+diagrams = ["jinja2", "railroad-diagrams"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -698,4 +726,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "29ba362b699064f1a860eb0360f6816cebedcdf386d4bbbb5a64664e6775950d"
+content-hash = "0e41415ed25f4e63c7fe3a2516055351e250172055d0ac8818453f7fb1cf9ab9"
