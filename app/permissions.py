@@ -9,7 +9,7 @@ class BookAccessPolicy(AccessPolicy):
             "effect": "allow",
         },
         {
-            "action": ["toggle_favorite"],
+            "action": ["toggle_favorite", "write_a_review"],
             "principal": "authenticated",
             "effect": "allow",
         },
@@ -20,4 +20,7 @@ class BookAccessPolicy(AccessPolicy):
         if isinstance(instance, list):
             fields.pop('description', None)
             fields.pop('reviews', None)
+        if 'write_a_review' not in request.get_full_path():
+            fields.pop('rating', None)
+            fields.pop('text', None)
         return fields

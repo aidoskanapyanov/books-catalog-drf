@@ -24,15 +24,17 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
-    title = serializers.CharField()
-    authors = serializers.StringRelatedField(many=True)
-    genres = serializers.StringRelatedField(many=True)
-    publication_date = serializers.DateField()
-    image_url = serializers.CharField()
-    average_rating = serializers.SerializerMethodField()
-    description = serializers.CharField()
+    title = serializers.CharField(read_only=True)
+    authors = serializers.StringRelatedField(many=True, read_only=True)
+    genres = serializers.StringRelatedField(many=True, read_only=True)
+    publication_date = serializers.DateField(read_only=True)
+    image_url = serializers.CharField(read_only=True)
+    average_rating = serializers.SerializerMethodField(read_only=True)
+    description = serializers.CharField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
-    is_favorite = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField(read_only=True)
+    rating = serializers.IntegerField(write_only=True)
+    text = serializers.CharField(write_only=True)
 
     def get_average_rating(self, obj):
         return obj.reviews.aggregate(Avg('rating'))['rating__avg']
@@ -58,5 +60,7 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
             'description',
             'reviews',
             'is_favorite',
+            'rating',
+            'text',
         ]
         access_policy = BookAccessPolicy
