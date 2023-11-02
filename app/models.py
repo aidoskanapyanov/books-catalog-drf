@@ -1,8 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+
 from .managers import CustomUserManager
-from annoying.fields import AutoOneToOneField
 
 
 class User(AbstractUser):
@@ -53,7 +52,7 @@ class FavoriteBook(models.Model):
 
 # Additional user profile model to store user favorites
 class UserProfile(models.Model):
-    user = AutoOneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     favorite_books = models.ManyToManyField(Book, through='FavoriteBook')
 
     def __str__(self):

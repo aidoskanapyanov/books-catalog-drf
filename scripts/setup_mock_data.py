@@ -1,8 +1,9 @@
 import random
 
+from django.contrib.auth import get_user_model
 from faker import Faker
 
-from app.models import Author, Book, FavoriteBook, Genre, Review, User, UserProfile
+from app.models import Author, Book, Genre, Review, UserProfile
 
 
 def setup_genres():
@@ -56,6 +57,7 @@ def setup_books():
 
 def setup_users():
     faker = Faker()
+    User = get_user_model()
     _users = []
     for i in range(200):
         user = User(
