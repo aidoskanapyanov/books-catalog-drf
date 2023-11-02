@@ -2,15 +2,23 @@ from django.db.models import Avg
 from rest_access_policy import FieldAccessMixin
 from rest_framework import serializers
 
-from app.models import Book, Review
+from app.models import Book, Review, UserProfile
 from app.permissions import BookAccessPolicy
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    book = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=Book.objects.all()
+    )
+    user = serializers.PrimaryKeyRelatedField(
+        write_only=True, queryset=UserProfile.objects.all()
+    )
     text = serializers.CharField()
-    rating = serializers.IntegerField()
-    email = serializers.StringRelatedField(source='user.user.email')
-    full_name = serializers.StringRelatedField(source='user.user.get_full_name')
+    rating = serializers.IntegerField(min_value=1, max_value=5)
+    email = serializers.StringRelatedField(source='user.user.email', read_only=True)
+    full_name = serializers.StringRelatedField(
+        source='user.user.get_full_name', read_only=True
+    )
 
     class Meta:
         model = Review
@@ -20,6 +28,8 @@ class ReviewSerializer(serializers.ModelSerializer):
             'full_name',
             'text',
             'rating',
+            'book',
+            'user',
         ]
 
 
@@ -33,7 +43,7 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
     description = serializers.CharField(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
     is_favorite = serializers.SerializerMethodField(read_only=True)
-    rating = serializers.IntegerField(write_only=True)
+    rating = serializers.IntegerField(write_only=True, min_value=1, max_value=5)
     text = serializers.CharField(write_only=True)
 
     def get_average_rating(self, obj):

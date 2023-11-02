@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 
 from .managers import CustomUserManager
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class User(AbstractUser):
@@ -41,7 +42,9 @@ class Book(models.Model):
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey('UserProfile', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField(
+        validators=[MaxValueValidator(5), MinValueValidator(1)]
+    )
     text = models.TextField()
 
 
