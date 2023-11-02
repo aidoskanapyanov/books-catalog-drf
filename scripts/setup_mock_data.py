@@ -1,9 +1,8 @@
 import random
 
-from django.contrib.auth import get_user_model
 from faker import Faker
 
-from app.models import Author, Book, Genre, Review, UserProfile
+from app.models import Author, Book, Genre, Review, User, UserProfile
 
 
 def setup_genres():
@@ -57,7 +56,6 @@ def setup_books():
 
 def setup_users():
     faker = Faker()
-    User = get_user_model()
     _users = []
     for i in range(200):
         user = User(
@@ -74,15 +72,19 @@ def setup_users():
 def setup_reviews():
     faker = Faker()
     _books = list(Book.objects.all())
-    _users = list(UserProfile.objects.all())
+
+    _users = list(User.objects.all())
+    _user_profiles = UserProfile.objects.bulk_create(
+        [UserProfile(user=user) for user in _users]
+    )
 
     _reviews = []
     for book in _books:
         for i in range(random.randint(1, 10)):
-            _user = random.choice(_users)
+            _user_profile = random.choice(_user_profiles)
             _rating = random.randint(1, 5)
             _text = faker.text()
-            _review = Review(book=book, user=_user, rating=_rating, text=_text)
+            _review = Review(book=book, user=_user_profile, rating=_rating, text=_text)
             _reviews.append(_review)
 
     Review.objects.bulk_create(_reviews)
