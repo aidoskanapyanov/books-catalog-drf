@@ -10,7 +10,7 @@ class BookAccessPolicy(AccessPolicy):
         },
         {
             "action": ["toggle_favorite"],
-            "principal": "*",
+            "principal": "authenticated",
             "effect": "allow",
         },
     ]
