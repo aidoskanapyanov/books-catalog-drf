@@ -1,10 +1,48 @@
 import { useEffect, useState } from "react";
 import {
-  createBrowserRouter,
   Link,
   RouterProvider,
+  createBrowserRouter,
   useParams,
 } from "react-router-dom";
+
+const BookForm = () => {
+  const { id } = useParams();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const rating = e.target.elements.rating.value;
+    const text = e.target.elements.text.value;
+    fetch(`http://localhost:8000/books/${id}/write_a_review/`, {
+      method: "POST",
+      body: JSON.stringify({ rating, text }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${btoa("admin@admin.com:admin")}`,
+      },
+    });
+    window.location.reload();
+    alert("Review added!");
+  };
+
+  return (
+    <div>
+      <div className="py-2">Add your review:</div>
+      <form className="rounded-md border p-4" onSubmit={onSubmit}>
+        <label htmlFor="rating" className="block pb-2">
+          Rating:
+        </label>
+        <input type="number" name="rating" className="rounded-sm border px-2" />
+        <label htmlFor="text" className="block pb-2">
+          Text:
+        </label>
+        <textarea name="text" className="w-full rounded-sm border p-2" />
+        <button className="rounded-md bg-slate-700 px-3 py-2 text-white hover:bg-slate-700/80">
+          Add review
+        </button>
+      </form>
+    </div>
+  );
+};
 
 const Book = () => {
   const [book, setBook] = useState();
@@ -20,12 +58,14 @@ const Book = () => {
 
   return (
     <div className="mx-auto max-w-xl p-4">
-      <Link
-        to="/"
-        className="text-blue-500 underline underline-offset-2 hover:no-underline"
-      >
-        Go back to list
-      </Link>
+      <div className="pb-4">
+        <Link
+          to="/"
+          className="text-blue-500 underline underline-offset-2 hover:no-underline"
+        >
+          Go back to list
+        </Link>
+      </div>
       <div className="flex-col items-stretch justify-center rounded-lg border p-6">
         <div className="pb-4 text-3xl">{book.title}</div>
         <img className="pb-2" src={book.image_url} />
@@ -42,7 +82,10 @@ const Book = () => {
           <div className="flex flex-wrap gap-2 pb-2 text-xs">
             {book.genres.map((genre) => {
               return (
-                <div className="rounded-lg border bg-gray-50 px-3 py-2">
+                <div
+                  key={genre}
+                  className="rounded-lg border bg-gray-50 px-3 py-2"
+                >
                   {genre}
                 </div>
               );
@@ -54,7 +97,10 @@ const Book = () => {
           <div className="flex flex-wrap gap-2 pb-2 text-xs">
             {book.authors.map((author) => {
               return (
-                <div className="rounded-lg border bg-gray-50 px-3 py-2">
+                <div
+                  key={author}
+                  className="rounded-lg border bg-gray-50 px-3 py-2"
+                >
                   {author}
                 </div>
               );
@@ -67,11 +113,15 @@ const Book = () => {
         </div>
         <div>{book.is_favorite ? "⭐" : ""}</div>
       </div>
+      <BookForm />
       <div className="py-4">Reviews:</div>
       <div className="flex flex-col items-stretch justify-center gap-2">
         {book.reviews.map((review) => {
           return (
-            <div className="flex flex-col items-stretch justify-center gap-2 rounded-lg border p-4">
+            <div
+              key={review.full_name}
+              className="flex flex-col items-stretch justify-center gap-2 rounded-lg border p-4"
+            >
               <div>{review.full_name}</div>
               <div>{review.text}</div>
               <div>{review.rating}/5</div>
@@ -97,7 +147,7 @@ function Books() {
   if (books) console.log(books);
 
   return (
-    <div className="h-screen p-4">
+    <div className="mx-auto h-screen max-w-screen-xl p-4">
       <h1 className="pb-4 text-center text-4xl">Books catalog app</h1>
       <ul className="grid grid-cols-4 gap-4 pb-10">
         {books &&
