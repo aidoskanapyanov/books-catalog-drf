@@ -145,6 +145,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-annoying"
+version = "0.10.6"
+description = "This is a django application that tries to eliminate annoying things in the Django framework."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-annoying-0.10.6.tar.gz", hash = "sha256:083b5e26f140f86178fcb47931f69b7ff75181ccd1e318d9c218ae9babc1805e"},
+    {file = "django_annoying-0.10.6-py2.py3-none-any.whl", hash = "sha256:e230f28fec0559b4fdb621ff202068a78170ada2ac1ec7a73ba822cc1f737791"},
+]
+
+[package.dependencies]
+Django = ">=1.11"
+six = "*"
+
+[[package]]
 name = "django-cors-headers"
 version = "4.3.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
@@ -726,4 +741,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "0e41415ed25f4e63c7fe3a2516055351e250172055d0ac8818453f7fb1cf9ab9"
+content-hash = "358984d141f54f539b36803a83f0b7aff0ed01e023ce218bc1e6b65d924d9a35"

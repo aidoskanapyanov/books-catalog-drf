@@ -66,12 +66,7 @@ def setup_users():
             is_active=True,
         )
         _users.append(user)
-    _created_users = User.objects.bulk_create(_users)
-    _user_profiles = []
-    for user in _created_users:
-        user_profile = UserProfile(user=user)
-        _user_profiles.append(user_profile)
-    UserProfile.objects.bulk_create(_user_profiles)
+    User.objects.bulk_create(_users)
 
 
 def setup_reviews():
