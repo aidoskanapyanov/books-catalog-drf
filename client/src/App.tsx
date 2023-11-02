@@ -133,6 +133,37 @@ const Book = () => {
   );
 };
 
+const BooksFilterForm = () => {
+  return (
+    <div className="mx-auto mb-2 flex max-w-sm flex-col items-stretch justify-center rounded-md border p-4 px-10">
+      <div className="pb-4 text-xl font-semibold">Filter books by:</div>
+      <form>
+        <label htmlFor="start_date" className="block">
+          Start date:
+        </label>
+        <input type="date" name="start_date" className="mb-4 border"></input>
+        <label htmlFor="end_date" className="block">
+          End date:
+        </label>
+        <input
+          type="date"
+          name="end_date"
+          className="mb-4 block border"
+        ></input>
+        <label htmlFor="author" className="block">
+          Author:
+        </label>
+        <input list="brow" className="block border p-2" name="author" />
+        <datalist id="brow">
+          <option value="First" />
+          <option value="Second" />
+          <option value="Third" />
+        </datalist>
+      </form>
+    </div>
+  );
+};
+
 function Books() {
   const [url, setUrl] = useState("http://localhost:8000/books/");
   const [books, setBooks] = useState();
@@ -149,6 +180,7 @@ function Books() {
   return (
     <div className="mx-auto h-screen max-w-screen-xl p-4">
       <h1 className="pb-4 text-center text-4xl">Books catalog app</h1>
+      <BooksFilterForm />
       <ul className="grid grid-cols-4 gap-4 pb-10">
         {books &&
           books.results.map((book) => {
