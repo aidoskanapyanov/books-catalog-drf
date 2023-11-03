@@ -68,7 +68,7 @@ class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             request.user.userprofile.favorite_books.remove(book)
         else:
             request.user.userprofile.favorite_books.add(book)
-        return self.retrieve(request, pk)
+        return Response({'status': 'favorite toggled'}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def write_a_review(self, request, pk=None):
@@ -88,7 +88,7 @@ class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
             serializer.save()
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return self.retrieve(request, pk)
+        return Response({'status': 'review saved'}, status=status.HTTP_201_CREATED)
 
 
 class AuthorViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
