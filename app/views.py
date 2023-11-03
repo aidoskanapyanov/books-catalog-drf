@@ -5,9 +5,14 @@ from rest_framework.decorators import action
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
-from app.models import Book, Review
-from app.permissions import BookAccessPolicy
-from app.serializers import BookSerializer, ReviewSerializer
+from app.models import Book, Review, Author, Genre
+from app.permissions import BookAccessPolicy, AuthorAccessPolicy, GenreAccessPolicy
+from app.serializers import (
+    BookSerializer,
+    ReviewSerializer,
+    AuthorSerializer,
+    GenreSerializer,
+)
 
 
 class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
@@ -49,3 +54,17 @@ class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return self.retrieve(request, pk)
+
+
+class AuthorViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    access_policy = AuthorAccessPolicy
+    pagination_class = None
+
+
+class GenreViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    access_policy = GenreAccessPolicy
+    pagination_class = None

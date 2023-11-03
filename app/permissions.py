@@ -24,3 +24,23 @@ class BookAccessPolicy(AccessPolicy):
             fields.pop('rating', None)
             fields.pop('text', None)
         return fields
+
+
+class AuthorAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "*",
+            "effect": "allow",
+        },
+    ]
+
+
+class GenreAccessPolicy(AccessPolicy):
+    statements = [
+        {
+            "action": ["list", "retrieve"],
+            "principal": "*",
+            "effect": "allow",
+        },
+    ]

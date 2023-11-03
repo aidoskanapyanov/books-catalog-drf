@@ -2,7 +2,7 @@ from django.db.models import Avg
 from rest_access_policy import FieldAccessMixin
 from rest_framework import serializers
 
-from app.models import Book, Review, UserProfile
+from app.models import Book, Review, UserProfile, Author, Genre
 from app.permissions import BookAccessPolicy
 
 
@@ -74,3 +74,19 @@ class BookSerializer(FieldAccessMixin, serializers.ModelSerializer):
             'text',
         ]
         access_policy = BookAccessPolicy
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Author
+        fields = ['name']
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Genre
+        fields = ['name']

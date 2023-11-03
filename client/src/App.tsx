@@ -46,7 +46,7 @@ const BookForm = () => {
 
 const Book = () => {
   const [book, setBook] = useState();
-  let { id } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     fetch(`http://localhost:8000/books/${id}/`)
@@ -133,32 +133,78 @@ const Book = () => {
   );
 };
 
-const BooksFilterForm = () => {
+const BooksFilterForm = ({ setFilter }) => {
+  const [authors, setAuthors] = useState();
+  const [genres, setGenres] = useState();
+
+  useEffect(() => {
+    fetch("http://localhost:8000/authors/")
+      .then((res) => res.json())
+      .then((authors) => setAuthors(authors));
+
+    fetch("http://localhost:8000/genres/")
+      .then((res) => res.json())
+      .then((genres) => setGenres(genres));
+  }, []);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const start_date = e.target.elements.start_date.value;
+    const end_date = e.target.elements.end_date.value;
+    const author = e.target.elements.author.value;
+    const genre = e.target.elements.genre.value;
+    setFilter({
+      publication_date__gte: start_date,
+      publication_date__lte: end_date,
+      authors__name__icontains: author,
+      genres__name__icontains: genre,
+    });
+  };
+
+  if (!authors) return <div>Loading</div>;
+  if (!genres) return <div>Loading</div>;
+
   return (
-    <div className="mx-auto mb-2 flex max-w-sm flex-col items-stretch justify-center rounded-md border p-4 px-10">
+    <div className="mx-auto my-8 flex max-w-sm flex-col items-stretch justify-center rounded-md border p-4 px-10">
       <div className="pb-4 text-xl font-semibold">Filter books by:</div>
-      <form>
+      <form onSubmit={onSubmit}>
         <label htmlFor="start_date" className="block">
           Start date:
         </label>
-        <input type="date" name="start_date" className="mb-4 border"></input>
+        <input
+          type="date"
+          name="start_date"
+          className="mb-4 border px-2"
+        ></input>
         <label htmlFor="end_date" className="block">
           End date:
         </label>
         <input
           type="date"
           name="end_date"
-          className="mb-4 block border"
+          className="mb-4 block border px-2"
         ></input>
         <label htmlFor="author" className="block">
           Author:
         </label>
-        <input list="brow" className="block border p-2" name="author" />
-        <datalist id="brow">
-          <option value="First" />
-          <option value="Second" />
-          <option value="Third" />
+        <input list="authors" className="block border p-2" name="author" />
+        <datalist id="authors">
+          {authors.map((author) => {
+            return <option key={author.name} value={author.name} />;
+          })}
         </datalist>
+        <label htmlFor="author" className="block">
+          Genre:
+        </label>
+        <input list="genres" className="block border p-2" name="genre" />
+        <datalist id="genres">
+          {genres.map((genre) => {
+            return <option key={genre.name} value={genre.name} />;
+          })}
+        </datalist>
+        <button className="mt-2 rounded-md bg-slate-700 px-3 py-2 text-white hover:bg-slate-700/80">
+          Filter
+        </button>
       </form>
     </div>
   );
@@ -167,30 +213,41 @@ const BooksFilterForm = () => {
 function Books() {
   const [url, setUrl] = useState("http://localhost:8000/books/");
   const [books, setBooks] = useState();
-  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState();
 
   useEffect(() => {
-    fetch(url)
+    console.log(url);
+
+    const newUrl = new URL(url);
+    if (filter) {
+      for (const [key, value] of Object.entries(filter)) {
+        newUrl.searchParams.set(key, value);
+      }
+    }
+    fetch(newUrl)
       .then((res) => res.json())
       .then((books) => setBooks(books));
-  }, [url]);
+  }, [url, filter]);
 
-  if (books) console.log(books);
+  if (!books) return <div>Loading</div>;
 
   return (
     <div className="mx-auto h-screen max-w-screen-xl p-4">
       <h1 className="pb-4 text-center text-4xl">Books catalog app</h1>
-      <BooksFilterForm />
+      <BooksFilterForm setFilter={setFilter} />
       <ul className="grid grid-cols-4 gap-4 pb-10">
         {books &&
-          books.results.map((book) => {
+          books.results!.map((book) => {
             return (
               <Link
                 to={`/books/${book.id}`}
                 key={book.id}
                 className="rounded-lg border p-4 hover:shadow-md"
               >
-                <div className="flex-col items-stretch justify-center">
+                <div
+                  key={book.id}
+                  className="flex-col items-stretch justify-center"
+                >
                   <div className="pb-4 text-xl">{book.title}</div>
                   <img className="pb-2" src={book.image_url} />
                   <div>
@@ -206,7 +263,10 @@ function Books() {
                     <div className="flex flex-wrap gap-2 pb-2 text-xs">
                       {book.genres.map((genre) => {
                         return (
-                          <div className="rounded-lg border bg-gray-50 px-3 py-2">
+                          <div
+                            key={genre}
+                            className="rounded-lg border bg-gray-50 px-3 py-2"
+                          >
                             {genre}
                           </div>
                         );
@@ -218,7 +278,10 @@ function Books() {
                     <div className="flex flex-wrap gap-2 pb-2 text-xs">
                       {book.authors.map((author) => {
                         return (
-                          <div className="rounded-lg border bg-gray-50 px-3 py-2">
+                          <div
+                            key={author}
+                            className="rounded-lg border bg-gray-50 px-3 py-2"
+                          >
                             {author}
                           </div>
                         );
@@ -233,13 +296,25 @@ function Books() {
       </ul>
       <div className="flex items-center justify-center gap-4 pb-10">
         <button
-          onClick={() => setUrl(books.previous)}
+          onClick={() => {
+            if (books.previous === null) {
+              alert("No previous page");
+              return;
+            }
+            setUrl(books.previous);
+          }}
           className="text-blue-500 underline underline-offset-2 hover:no-underline"
         >
           Previous
         </button>
         <button
-          onClick={() => setUrl(books.next)}
+          onClick={() => {
+            if (books.next === null) {
+              alert("No next page");
+              return;
+            }
+            setUrl(books.next);
+          }}
           className="text-blue-500 underline underline-offset-2 hover:no-underline"
         >
           Next
