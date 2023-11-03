@@ -96,4 +96,9 @@ def run():
     setup_users()
     setup_books()
     setup_reviews()
-    User.objects.create_superuser(email='admin@admin.com', password='admin')
+    User.objects.create_superuser(
+        email='admin@admin.com',
+        password='admin',
+        first_name='Admin',
+        last_name='Adminovski',
+    )
