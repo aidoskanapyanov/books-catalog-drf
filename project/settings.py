@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'django_extensions',
     "corsheaders",
     "app.apps.AppConfig",
+    'nplusone.ext.django',
 ]
 
 MIDDLEWARE = [
+    'nplusone.ext.django.NPlusOneMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -145,3 +147,23 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'app.User'
+
+import logging
+
+NPLUSONE_LOGGER = logging.getLogger('nplusone')
+NPLUSONE_LOG_LEVEL = logging.WARN
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'nplusone': {
+            'handlers': ['console'],
+            'level': 'WARN',
+        },
+    },
+}

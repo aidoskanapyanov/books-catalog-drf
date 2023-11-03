@@ -19,6 +19,7 @@ django-cors-headers = "^4.3.0"
 faker = "^19.12.1"
 drf-access-policy = "^1.5.0"
 django-annoying = "^0.10.6"
+nplusone = "^1.0.0"
 
 
 [build-system]
