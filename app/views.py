@@ -18,17 +18,7 @@ import re
 
 
 class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
-    queryset = (
-        Book.objects.all()
-        .prefetch_related('authors')
-        .prefetch_related('genres')
-        .prefetch_related(
-            Prefetch(
-                'reviews',
-                queryset=Review.objects.order_by('-id').select_related('user'),
-            )
-        )
-    )
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
