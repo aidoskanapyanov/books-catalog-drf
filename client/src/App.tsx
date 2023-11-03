@@ -235,7 +235,7 @@ function Books() {
     <div className="mx-auto h-screen max-w-screen-xl p-4">
       <h1 className="pb-4 text-center text-4xl">Books catalog app</h1>
       <BooksFilterForm setFilter={setFilter} />
-      <ul className="grid grid-cols-4 gap-4 pb-10">
+      <ul className="grid grid-cols-2 gap-4 pb-10 md:grid-cols-4">
         {books &&
           books.results!.map((book) => {
             return (
