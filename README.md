@@ -27,6 +27,7 @@ Additionally, the project should include user registration and authentication vi
 - Backend api documentation doesn't show relevant info for some @action routes in viewsets. Mainly because some fieds are scoped out in `permissions.py` during the runtime.
 - Filtering was done via string matching, which could be optimized by writing filters from scratch or doing foreign key matching.
 - Client side uses Basic Auth for testing purposes. Can be improved with JWT auth and state management and persistence.
+- Handle some potential n+1 queries.
 
 ## Running Locally
 
