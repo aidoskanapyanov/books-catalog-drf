@@ -21,44 +21,57 @@ Users should also have the ability to mark books as favorites, and the book list
 
 Additionally, the project should include user registration and authentication via email, with two options: with confirmation and without confirmation. Content creation and management should be handled through the admin panel.
 
-## Project Components
+## Some implementation notes
 
-1.  **Django Rest Framework (DRF):** The project will be built using DRF to create API endpoints for managing books, genres, authors, reviews, and user-related operations.
-2.  **SQLite Database:** The project will use an SQLite database for data storage.
-3.  **SEO Optimization:** SEO-friendly endpoints will be implemented where necessary to enhance search engine visibility.
-4.  **drf-yasg and Swagger Documentation (Optional):** drf-yasg and Swagger can be integrated to provide API documentation for easier development and testing.
-5.  **User Authentication:** The project will include user registration and authentication via email, with options for both confirmed and unconfirmed registration.
-6.  **Admin Panel:** Content creation and management will be handled through the Django admin panel.
+- Client side is a very quick mockup with React. There are a lot of optimizations to be made (i.e. state management, query management, seo etc.)
+- Backend api documentation doesn't show relevant info for some @action routes in viewsets. Mainly because some fieds are scoped out in `permissions.py` during the runtime.
+- Filtering was done via string matching, which could be optimized by writing filters from scratch or doing foreign key matching.
+- Client side uses Basic Auth for testing purposes. Can be improved with JWT auth and state management and persistence.
 
-## Endpoints
+## Running Locally
 
-- **GET /api/books:** Retrieve a list of books with filtering options.
-- **GET /api/books/{book_id}:** Retrieve details for a specific book, including its reviews.
-- **POST /api/books/{book_id}/reviews:** Add a review for a book.
-- **PUT /api/books/{book_id}/reviews/{review_id}:** Update a review for a book.
-- **DELETE /api/books/{book_id}/reviews/{review_id}:** Delete a review for a book.
-- **POST /api/books/{book_id}/favorite:** Add a book to favorites.
-- **DELETE /api/books/{book_id}/favorite:** Remove a book from favorites.
-- **POST /api/auth/register:** Register a new user.
-- **POST /api/auth/login:** Log in as a registered user.
-- **GET /api/auth/logout:** Log out the currently authenticated user.
+### Client
 
-## Architecture
+1. cd into client folder:
 
-The project will follow the Model-View-Controller (MVC) architectural pattern, with Django and DRF for building the web application. The components will be organized as follows:
+```sh
+cd client
+```
 
-- **Models:** These will represent the data structures, including books, genres, authors, reviews, and user-related data.
-- **Views:** These will define the API endpoints and handle user requests.
-- **Serializers:** These will convert complex data types, such as queryset and model instances, to native Python data types.
-- **URLs:** These will map URLs to view functions, defining the API endpoints.
-- **Templates:** HTML templates may be used for rendering the front-end, if required.
+2. Install dependencies using pnpm:
 
-## Database Schema
+```sh
+pnpm install
+```
 
-The database schema will include tables for books, genres, authors, reviews, users, and user favorites.
+3. Start the development server:
 
-## Admin Panel
+```sh
+pnpm dev
+```
 
-The Django admin panel will be used for managing and populating the catalog with book data, genres, authors, and user accounts.
+### Backend
 
-This design document outlines the key aspects of the Book Catalog project, including its requirements, components, endpoints, architecture, and database schema. The project aims to provide a user-friendly web application for managing and reviewing books, with an optional integration of API documentation for developers.
+1. Install dependencies via poetry:
+
+```sh
+poetry install --no-root
+```
+
+2. Migrate:
+
+```sh
+python manage.py migrate
+```
+
+3. Setup mock data for the backend:
+
+```sh
+python manage.py runscript setup_mock_data
+```
+
+4. Start dev server:
+
+```sh
+python manage.py runserver
+```
