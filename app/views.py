@@ -13,10 +13,22 @@ from app.serializers import (
     AuthorSerializer,
     GenreSerializer,
 )
+from django.db.models import Prefetch
+import re
 
 
 class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
-    queryset = Book.objects.all()
+    queryset = (
+        Book.objects.all()
+        .prefetch_related('authors')
+        .prefetch_related('genres')
+        .prefetch_related(
+            Prefetch(
+                'reviews',
+                queryset=Review.objects.order_by('-id').select_related('user'),
+            )
+        )
+    )
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
@@ -25,6 +37,29 @@ class BookViewSet(AccessViewSetMixin, viewsets.ModelViewSet):
         'authors__name': ['icontains'],
     }
     access_policy = BookAccessPolicy
+
+    def get_queryset(self):
+        pattern = re.compile("/books/\d+/")
+        if self.request.method == 'GET' and pattern.match(self.request.get_full_path()):
+            return (
+                Book.objects.all()
+                .order_by('id')
+                .prefetch_related('authors')
+                .prefetch_related('genres')
+                .prefetch_related(
+                    Prefetch(
+                        'reviews',
+                        queryset=Review.objects.order_by('-id').select_related('user'),
+                    )
+                )
+            )
+
+        return (
+            Book.objects.all()
+            .order_by('id')
+            .prefetch_related('authors')
+            .prefetch_related('genres')
+        )
 
     @action(detail=True, methods=['post'])
     def toggle_favorite(self, request, pk=None):
